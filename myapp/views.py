@@ -3,7 +3,6 @@ from django.http import HttpResponse
 import requests
 from django.http import JsonResponse   
 from urllib.parse import urljoin
-import json
 from bs4 import BeautifulSoup
 
 cookies = {
@@ -55,6 +54,7 @@ def get_details(request,start_date,end_date):
     cars_data = []
     cars = soup.find_all('div',class_='row offer-item car-item')
     base_url = "https://www.rentalcar-tenerife.com"
+    print(len(cars))
     for car in cars:
         relative_src = car.find("img")['src']
         src_img = urljoin(base_url, relative_src)
@@ -74,10 +74,9 @@ def get_details(request,start_date,end_date):
             }
     
         cars_data.append(car_data)
-    json_data = json.dumps(cars_data)
 
     # Create a JsonResponse object with the JSON data
-
+    print(cars_data)
     data = {
         "message": cars_data,
         "status": "success"
