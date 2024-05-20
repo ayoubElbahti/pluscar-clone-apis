@@ -3,7 +3,6 @@ from django.http import HttpResponse
 import requests
 from django.http import JsonResponse   
 from urllib.parse import urljoin
-import json
 from bs4 import BeautifulSoup
 
 cookies = {
@@ -55,6 +54,7 @@ def get_details(request,start_date,end_date):
     cars_data = []
     cars = soup.find_all('div',class_='row offer-item car-item')
     base_url = "https://www.rentalcar-tenerife.com"
+    print(len(cars))
     for car in cars:
         relative_src = car.find("img")['src']
         src_img = urljoin(base_url, relative_src)
@@ -74,10 +74,9 @@ def get_details(request,start_date,end_date):
             }
     
         cars_data.append(car_data)
-    json_data = json.dumps(cars_data)
 
     # Create a JsonResponse object with the JSON data
-
+    print(cars_data)
     data = {
         "message": cars_data,
         "status": "success"
@@ -137,7 +136,7 @@ def details(request):
                     }
             
                 cars_data.append(car_data)
-            json_data = json.dumps(cars_data)
+            #json_data = json.dumps(cars_data)
 
             print(cars_data)
             print(len(cars))
@@ -161,30 +160,6 @@ def details(request):
             'cars_data': cars_data,
             'result': len(cars)
         })
-
-def download_fb_video(request):
-    url = request.GET.get('url_param')
-    download.url = str(url).replace("ẞ",'&') 
-    #print(url)  
-    # Create a dictionary representing your JSON data
-    response = download.facebook()
-    if response['status_code'] == 200:
-        data = response
-    else:
-        data = {
-            "message": response['message'],
-            "status": "failed"
-        }
-
-    # Create a JsonResponse object with the JSON data
-    response = JsonResponse(data)
-
-    # Add custom headers to the response
-    response['X-Custom-Header'] = 'Custom Value'
-
-    return response
-
-
 
 
 def hello_world(request):
