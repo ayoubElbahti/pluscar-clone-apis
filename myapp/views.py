@@ -4,6 +4,7 @@ import requests
 from django.http import JsonResponse   
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
+import cloudscraper
 
 cookies = {
 
@@ -48,7 +49,9 @@ def get_details(request,start_date,end_date):
     'time_till': '10:00',
     'carid': '0',
 }
-    response = requests.post('https://www.rentalcar-tenerife.com/en/rent/', cookies=cookies, headers=headers, data=data)
+    scraper = cloudscraper.create_scraper()
+
+    response = scraper.post('https://www.rentalcar-tenerife.com/en/rent/', cookies=cookies, headers=headers, data=data)
     print(response.text)
     soup = BeautifulSoup(response.text, 'html.parser')
     cars_data = []
@@ -65,11 +68,11 @@ def get_details(request,start_date,end_date):
         tt = car.find("p",class_="offer-price").find("span").text
         offer_price = car.find("p",class_="offer-price").text.replace(tt,"")
         car_data = {
-        "src_img": src_img,
-        "title": title,
-        "style": style,
+        "image": src_img,
+        "name": title,
+        "type": style,
         "description": description,
-        "amount": amount,
+        "price": amount,
         "offer_price": offer_price
             }
     
@@ -127,11 +130,11 @@ def details(request):
                 tt = car.find("p",class_="offer-price").find("span").text
                 offer_price = car.find("p",class_="offer-price").text.replace(tt,"")
                 car_data = {
-                "src_img": src_img,
-                "title": title,
-                "style": style,
+                "image": src_img,
+                "name": title,
+                "type": style,
                 "description": description,
-                "amount": amount,
+                "price": amount,
                 "offer_price": offer_price
                     }
             
