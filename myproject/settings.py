@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t1v%sbm0v5m&cs51-^rr)a5_4e%cr&26zsd650=dhs0ymv*i5a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pluscar-clone-apis.onrender.com']
 
 
 # Application definition
