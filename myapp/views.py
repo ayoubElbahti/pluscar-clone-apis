@@ -50,7 +50,7 @@ def get_details(request,start_date,end_date):
     'carid': '0',
 }
     response = requests.post('https://www.rentalcar-tenerife.com/en/rent/', cookies=cookies, headers=headers, data=data)
-
+    print(response.text)
     soup = BeautifulSoup(response.text, 'html.parser')
     cars_data = []
     cars = soup.find_all('div',class_='row offer-item car-item')
