@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .content p {
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .details-table th, .details-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .details-table th {
+            background-color: #f2f2f2;
+        }
+        .details-table img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+        </div>
+        <div class="content">
+            <p>{{ dear }} {{ client }},</p>
+            <p>{{ front_message }}</p>
+            <table class="details-table">
+                <tr>
+                    <th>{{ car_name_label }}</th>
+                    <td>{{ car_name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ car_style_label }}</th>
+                    <td>{{ car_style }}</td>
+                </tr>
+                <tr>
+                    <th>{{ hotel_drop_name_label }}</th>
+                    <td>{{ hoteldropname }}</td>
+                </tr>
+                <tr>
+                    <th>{{ hotel_name_label }}</th>
+                    <td>{{ hotelname }}</td>
+                </tr>
+                <tr>
+                    <th>{{ pickup_date_label }}</th>
+                    <td>{{ pickupdate }}</td>
+                </tr>
+                <tr>
+                    <th>{{ dropoff_date_label }}</th>
+                    <td>{{ dropoffdate }}</td>
+                </tr>
+                <tr>
+                    <th>{{ location_label }}</th>
+                    <td>{{ location }}</td>
+                </tr>
+                <tr>
+                    <th>{{ return_location_label }}</th>
+                    <td>{{ selected_return_location }}</td>
+                </tr>
+                <tr>
+                    <th>{{ number_of_days_label }}</th>
+                    <td>{{ nbr_days }}</td>
+                </tr>
+                <tr>
+                    <th>{{ total_price_label }}</th>
+                    <td>{{ total_price }}€</td>
+                </tr>
+            </table>
+
+            <p>{{ back_message }}</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Elite Rent a car. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

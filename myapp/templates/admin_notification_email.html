@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Order Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .id_book{
+            color: #d41616;
+            
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .content p {
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .details-table th, .details-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .details-table th {
+            background-color: #f2f2f2;
+        }
+        .details-table img {
+            max-width: 100px;
+            height: auto;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #d52323;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button-container a:hover {
+            background-color: #d41616;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Order Received   <span class="id_book"> 
+                {{id_booking}}
+            </span></h1>
+        </div>
+        <div class="content">
+            <p>Dear Admin,</p>
+            <p>A new order has been received with the following details:</p>
+            <table class="details-table">
+                <tr>
+                    <th>Car Name</th>
+                    <td>{{ car_name }}</td>
+                </tr>
+                <tr>
+                    <th>Car Style</th>
+                    <td>{{ car_style }}</td>
+                </tr>
+                <tr>
+                    <th>Hotel Drop Name</th>
+                    <td>{{ hoteldropname }}</td>
+                </tr>
+                <tr>
+                    <th>Hotel Name</th>
+                    <td>{{ hotelname }}</td>
+                </tr>
+                <tr>
+                    <th>Pickup Date</th>
+                    <td>{{ pickupdate }}</td>
+                </tr>
+                <tr>
+                    <th>Dropoff Date</th>
+                    <td>{{ dropoffdate }}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{ location }}</td>
+                </tr>
+                <tr>
+                    <th>Return Location</th>
+                    <td>{{ selected_return_location }}</td>
+                </tr>
+                <tr>
+                    <th>Number of Days</th>
+                    <td>{{ nbr_days }}</td>
+                </tr>
+                <tr>
+                    <th>Total Price</th>
+                    <td>{{ total_price }}€</td>
+                </tr>
+             
+            </table>
+            <div class="button-container">
+                <a href="https://eliterent-car.onrender.com/sysadmin/book" target="_blank">View Order Details</a>
+            </div>
+          
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Your Company Name. All rights reserved.</p> 
+        </div>
+    </div>
+</body>
+</html>

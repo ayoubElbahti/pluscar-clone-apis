@@ -25,21 +25,42 @@ SECRET_KEY = 'django-insecure-t1v%sbm0v5m&cs51-^rr)a5_4e%cr&26zsd650=dhs0ymv*i5a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pluscar-clone-apis.onrender.com']
+ALLOWED_HOSTS = ['192.168.0.105','localhost','127.0.0.1']
 
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
+CORS_ALLOW_ALL_ORIGINS = False
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # e.g., smtp.gmail.com for Gmail
+EMAIL_PORT = 587  # or 465 for SSL
+EMAIL_USE_TLS = True  # or EMAIL_USE_SSL for port 465
+EMAIL_HOST_USER = 'ayoubelbahti8@gmail.com' #'eliterentacartenerifer@gmail.com'
+EMAIL_HOST_PASSWORD =  'qwrq sxvt sdno lajt' #'hzet tcaf iefg afib'
+
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django_crontab',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'rest_framework',
     'corsheaders',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,9 +73,29 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'myproject.urls'
-CORS_ALLOW_ALL_ORIGINS = True
 
+CSRF_TRUSTED_ORIGINS = [
+  'http://localhost:3000',
+]
+
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Adjust this to your React development server URL
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+
+ROOT_URLCONF = 'myproject.urls'
+
+LOGIN_URL = '/admin/login/'
 
 TEMPLATES = [
     {
@@ -78,11 +119,18 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = {  
+    'default': {  
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'elit_cars',  
+        'USER': 'elit',  
+        'PASSWORD': 'elit_2000',  
+        'HOST': '127.0.0.1',  
+        'PORT': '3306',  
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }  
+    }  
 }
 
 
