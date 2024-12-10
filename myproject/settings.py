@@ -75,12 +75,12 @@ MIDDLEWARE = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-  'http://localhost:3000',
+  'https://altarentcar.onrender.com',
 ]
 
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',  # Adjust this to your React development server URL
+    'https://altarentcar.onrender.com',  # Adjust this to your React development server URL
 ]
 
 REST_FRAMEWORK = {
@@ -119,19 +119,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {  
-    'default': {  
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'elit_cars',  
-        'USER': 'elit',  
-        'PASSWORD': 'elit_2000',  
-        'HOST': '127.0.0.1',  
-        'PORT': '3306',  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }  
-    }  
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # Default engine for SQLite
+        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
+    }
 }
+
 
 
 # Password validation
