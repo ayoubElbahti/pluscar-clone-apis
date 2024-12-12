@@ -76,11 +76,15 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
   'https://altarentcar.onrender.com',
+       'http://192.168.137.1',  # Local IP address
+    'http://your-public-ip',  # Your public IP address (if applicable)
 ]
 
 
 CORS_ORIGIN_WHITELIST = [
-    'https://altarentcar.onrender.com',  # Adjust this to your React development server URL
+    'https://altarentcar.onrender.com',
+       'http://192.168.137.1',  # Local IP address
+    'http://your-public-ip',  # Your public IP address (if applicable)# Adjust this to your React development server URL
 ]
 
 REST_FRAMEWORK = {
