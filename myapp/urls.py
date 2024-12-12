@@ -21,7 +21,6 @@ urlpatterns = [
     path('update_acc/<int:id>/', views.update_acc, name='update_acc'),
     path('get_all_bookings/', views.get_all_bookings, name='get_all_bookings'),
     path('get_all_accessorys/', views.get_all_accessorys, name='get_all_accessorys'),
-    path('get_all_styles/', views.get_all_styles, name='get_all_styles'),
     path('get_all_moteurs/', views.get_all_moteurs, name='get_all_moteurs'),
     path('get_all_radios/', views.get_all_radios, name='get_all_radios'),
     path('delete_all_cars/', views.delete_all_cars, name='delete_all_cars'),
