@@ -1,30 +1,34 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-import requests
-from django.core.mail import send_mail
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from .models import Car  , Moteurs , Radios , Booking , Client , Accessoire , Taux , Detail_accessoire  , Contactclient
+from .serializers import UserSerializer
+from bs4 import BeautifulSoup
+from datetime import datetime, timedelta
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import get_object_or_404
-from urllib.parse import urljoin
-from bs4 import BeautifulSoup
-import cloudscraper
-from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail , get_connection
+from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
-import json
-from datetime import datetime, timedelta
-from .models import Car , Styles , Moteurs , Radios , Booking , Client , Accessoire , Taux , Detail_accessoire  , Contactclient
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_protect
-import random
-
 from rest_framework import generics
-from .serializers import UserSerializer
-from django.contrib.auth.models import User
+from rest_framework import serializers
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from urllib.parse import urljoin
+import cloudscraper
+import json
+import random
+import requests
 
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -68,7 +72,8 @@ def contact_view(request):
                 f"New Contact Form Submission {contact_created}",
                 message_ad_html,  # plain text version
                 from_email,
-                [from_email]
+                [from_email],
+                connection=connection
             )
             email_admin.attach_alternative(message_ad_html, "text/html")
             send_mail(subject, message, email, [''], fail_silently=False)
@@ -200,12 +205,12 @@ def activation_car(request,car_id):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def update_taux(request):
-    if 'taux' in request.data:
+    if 'taux' in request.POST:
         taux = Taux.objects.first()
-        taux.taux_buy = float(request.data.get('taux'))
+        taux.taux_buy = float(request.POST.get('taux'))
         taux.save()
         return Response({'message': 'okey', 'status': '200'})
     else:
@@ -224,8 +229,8 @@ def get_taux(request):
     else :
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def update_acc(request,id):
 
     acc =  acc = Accessoire.objects.get(id=id)
@@ -247,8 +252,8 @@ def update_acc(request,id):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def update_car(request,car_id):
     print("update car" , car_id)
     car = get_object_or_404(Car, id=car_id)
@@ -398,26 +403,28 @@ def insert_into(id_car,title,category,price,image_url,is_active,doors,air_condit
             central_locking = central_locking,moteur = moteur , passengers = passengers , car_model = car_model , is_auto = is_auto
         )
     car.save()
-    cart_details = {'car' : car}
+    cart_details = {'car' : car,
+        'link':f'https://eliterent-car.onrender.com/sysadmin/update/{car.id}'
+    }
     from_email = 'eliterentacartenerifer@gmail.com'
     message_ad_html = render_to_string('car_created_email.html', cart_details)
     email_admin = EmailMultiAlternatives(
         f"New Cars Was Added {cart_details}",
         message_ad_html,  # plain text version
         from_email,
-        [from_email]
+        [from_email],
+        connection=connection
     )
     email_admin.attach_alternative(message_ad_html, "text/html")
     send_mail("New Car Was Added !!!", message_ad_html, "ayoubelbahti79@gmail.com", [''], fail_silently=False)
     try:
         email_admin.send()
-        logger.debug(f'new car added at {datetime.datetime.now()}')
+        logger.debug(f'new car added at {datetime.now()}')
     except Exception as e:
         print('error ! ', str(e))
 
 
 def get_time_zones(start_datetime_string,end_datetime_string):
-    import datetime
     import pytz
 
     # Define the date-time strings
@@ -425,8 +432,8 @@ def get_time_zones(start_datetime_string,end_datetime_string):
     #end_datetime_string = "10/07/2024 14:15"
 
     # Parse the date-time strings into datetime objects
-    start_datetime_object = datetime.datetime.strptime(start_datetime_string, "%Y/%m/%d %H:%M")
-    end_datetime_object = datetime.datetime.strptime(end_datetime_string, "%Y/%m/%d %H:%M")
+    start_datetime_object = datetime.strptime(start_datetime_string, "%Y/%m/%d %H:%M")
+    end_datetime_object = datetime.strptime(end_datetime_string, "%Y/%m/%d %H:%M")
 
     # Define the time zone (adjust according to your requirements)
     timezone = pytz.timezone('UTC')
@@ -587,7 +594,7 @@ def import_cars(request):
     print(len(cars))
     import logging
     logger = logging.getLogger('myapp')
-    logger.debug(f'{len(cars)} cars at {datetime.datetime.now()}')
+    logger.debug(f'{len(cars)} cars at {datetime.now()}')
 
     for car in cars:
         title = car.find('div', class_='cars_name').text
@@ -868,23 +875,6 @@ def delete_all_cars(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-@csrf_exempt
-def get_all_styles(request):
-    if request.method == 'POST':
-        try:
-            dt = []
-            styles = Styles.objects.all()
-            for style in styles:
-                data_style = {
-                    'name': style.name,
-                }
-                dt.append(data_style)
-
-            return JsonResponse(dt, safe=False)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 @csrf_exempt
 def get_acc(request, book_id):
@@ -1040,8 +1030,8 @@ def get_all_moteurs(request):
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def add_car(request):
     title = request.POST.get('title')
     category = request.POST.get('category')
@@ -1159,7 +1149,8 @@ def send_booking_confirmation(recepteur , admin_mail ,booking_details , lang):
         subject,
         message_html,  # plain text version
         from_email,
-        [recepteur]
+        [recepteur],
+        connection=connection
     )
     email.attach_alternative(message_html, "text/html")
 
@@ -1167,7 +1158,8 @@ def send_booking_confirmation(recepteur , admin_mail ,booking_details , lang):
         ad_subject,
         message_ad_html,  # plain text version
         from_email,
-        [admin_mail]
+        [admin_mail],
+        connection=connection
     )
     email_admin.attach_alternative(message_ad_html, "text/html")
 
@@ -1180,8 +1172,8 @@ def send_booking_confirmation(recepteur , admin_mail ,booking_details , lang):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def add_acc(request):
     name = request.POST.get('name')
     price = request.POST.get('price')
@@ -1311,6 +1303,8 @@ def add_book(request):
                 'selected_return_location': book.selected_return_location,
                 'nbr_days': book.nbr_days,
                 'id_booking': book.id_booking,
+                'mark':"Elite",
+                'link':"https://eliterent-car.onrender.com/admin/book",
                 'image': "image_url"
             }
         
@@ -1324,17 +1318,14 @@ def add_book(request):
 
 
 
-def add_style(title):
-    style = Styles(name=title)
-    style.save()
-    print('ok')
+
 
 def ayoub(title):
     print(title)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def add_moteur(request):
     title = request.POST.get('title')
     if title:
@@ -1352,8 +1343,8 @@ def add_moteur(request):
     return JsonResponse(data)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+@csrf_exempt #@permission_classes([IsAuthenticated])
 def add_radio(request):
     title = request.POST.get('title')
     if title:
@@ -1369,5 +1360,4 @@ def add_radio(request):
             'status': 'error'
         }
     return JsonResponse(data)
-
 
