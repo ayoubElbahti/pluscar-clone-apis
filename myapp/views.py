@@ -208,13 +208,15 @@ def activation_car(request,car_id):
 #@api_view(['POST'])
 @csrf_exempt #@permission_classes([IsAuthenticated])
 def update_taux(request):
+    print('update taux')
     if 'taux' in request.POST:
         taux = Taux.objects.first()
+        print('taux bd is ' , taux.taux_buy )
         taux.taux_buy = float(request.POST.get('taux'))
         taux.save()
-        return Response({'message': 'okey', 'status': '200'})
+        return JsonResponse({'message': 'okey', 'status': '200'})
     else:
-        return Response({'error': 'Invalid request method'}, status=400)
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
 @csrf_exempt
 def get_taux(request):
     if request.method == 'GET':
