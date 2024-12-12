@@ -75,12 +75,12 @@ MIDDLEWARE = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-  'https://altarentcar.onrender.com',
+  '*',
 ]
 
 
 CORS_ORIGIN_WHITELIST = [
-    'https://altarentcar.onrender.com',  # Adjust this to your React development server URL
+    '*',  # Adjust this to your React development server URL
 ]
 
 REST_FRAMEWORK = {
